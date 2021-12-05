@@ -44,11 +44,15 @@ clearAll.addEventListener('click', () => {
   resetCalc();
 })
 
-function resetCalc() {
-  display.textContent = '';
+function resetHistory() {
   while (history.firstChild) {
     history.removeChild(history.firstChild);
   }
+}
+
+function resetCalc() {
+  display.textContent = '';
+  resetHistory();
 }
 
 function resetDisplay() {
@@ -56,6 +60,7 @@ function resetDisplay() {
 }
 
 function add() {
+  resetHistory();
   let operand1 = document.createElement('li');
   let plusSign = document.createElement('li');
   plusSign.textContent = '+';
