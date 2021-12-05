@@ -1,0 +1,17 @@
+*{
+    text-align: center;
+    margin: 0 auto;
+}
+#calcBody {
+    width: 50%;
+    height: 50%;
+}
+#calcDisplay {
+    width: 50%;
+    border: 1px solid black;
+    display: block;
+}
+#calcButtons {
+    margin: auto;
+    border: 1px solid black;
+}
