@@ -22,7 +22,12 @@ equalsButton.addEventListener('click', () => {
 })
 
 addButton.addEventListener('click', () => {
-  add();
+  if (history.firstElementChild === null) {
+    add();
+  } else {
+    equalsTo();
+    resetHistory();
+  }
 })
 
 
