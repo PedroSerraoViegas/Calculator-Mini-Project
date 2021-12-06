@@ -1,35 +1,80 @@
+//VARIABLES N' STUFF
 const screen = document.querySelector('#calcScreen');
 const display = document.querySelector('#calcDisplay');
 const erase = document.querySelector('#erase');
 const history = document.querySelector('#history');
 const equalsButton = document.querySelector('#equalsTo');
 const addButton = document.querySelector('#add');
+const subtractButton = document.querySelector('#subtract');
+const multiplyButton = document.querySelector('#multiply');
+const divideButton = document.querySelector('#divide');
 const clearAll = document.querySelector('#clearAll');
+const clearEntry = document.querySelector('#clearEntry');
 const specialButton = document.querySelector('#specialButton');
 const buttonClass = document.getElementsByClassName('inputButton');
-let operand1 = '';
-let operand2 = '';
-let result = '';
+let operationExecuted = false;
 
-for (let i = 0; i< buttonClass.length; i++) {
+//EVENT LISTENERS
+for (let i = 0; i < buttonClass.length; i++) {
   buttonClass[i].addEventListener('click', () => {
-    display.textContent += parseInt(buttonClass[i].textContent);
-})
-}
+      if (operationExecuted === true && history.lastElementChild.textContent !== '=') {
+        resetDisplay();
+        operationExecuted = false;
+      } else if (operationExecuted === true){
+        resetCalc();
+        operationExecuted = false;
+      }
+      display.textContent += parseInt(buttonClass[i].textContent);
+    }) 
+  }
 
 equalsButton.addEventListener('click', () => {
   equalsTo();
 })
 
 addButton.addEventListener('click', () => {
-  if (history.firstElementChild === null) {
+  if (history.firstElementChild === null || history.children.length === 4) {
     add();
-  } else {
+  } else if (display.textContent !== ''){
     equalsTo();
-    resetHistory();
+    history.firstChild.textContent = display.textContent;
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
   }
 })
 
+subtractButton.addEventListener('click', () => {
+  if (history.firstElementChild === null || history.children.length === 4) {
+    subtract();
+  } else if (display.textContent !== ''){
+    equalsTo();
+    history.firstChild.textContent = display.textContent;
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+  }
+})
+
+multiplyButton.addEventListener('click', () => {
+  if (history.firstElementChild === null || history.children.length === 4) {
+    multiply();
+  } else if (display.textContent !== ''){
+    equalsTo();
+    history.firstChild.textContent = display.textContent;
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+  }
+})
+
+divideButton.addEventListener('click', () => {
+  if (history.firstElementChild === null || history.children.length === 4) {
+    divide();
+  } else if (display.textContent !== ''){
+    equalsTo();
+    history.firstChild.textContent = display.textContent;
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+  }
+})
 
 specialButton.addEventListener('click', () => {
     display.textContent += specialButton.textContent;
@@ -47,8 +92,15 @@ erase.addEventListener('click', () => {
 
 clearAll.addEventListener('click', () => {
   resetCalc();
+  operationExecuted = false;
 })
 
+clearEntry.addEventListener('click', () => {
+  resetDisplay();
+  operationExecuted = false;
+})
+
+//RESETTING FUNCTIONS
 function resetHistory() {
   while (history.firstChild) {
     history.removeChild(history.firstChild);
@@ -56,7 +108,7 @@ function resetHistory() {
 }
 
 function resetCalc() {
-  display.textContent = '';
+  resetDisplay();
   resetHistory();
 }
 
@@ -64,6 +116,7 @@ function resetDisplay() {
   display.textContent = '';
 }
 
+//MATHEMATICAL OPERATIONS
 function add() {
   resetHistory();
   let operand1 = document.createElement('li');
@@ -76,7 +129,44 @@ function add() {
   resetDisplay();
 }
 
+function subtract() {
+  resetHistory();
+  let operand1 = document.createElement('li');
+  let plusSign = document.createElement('li');
+  plusSign.textContent = '-';
+  let a = parseFloat(display.textContent);
+  operand1.textContent = a;
+  history.appendChild(operand1);
+  history.appendChild(plusSign);
+  resetDisplay();
+}
+
+function multiply() {
+  resetHistory();
+  let operand1 = document.createElement('li');
+  let plusSign = document.createElement('li');
+  plusSign.textContent = '*';
+  let a = parseFloat(display.textContent);
+  operand1.textContent = a;
+  history.appendChild(operand1);
+  history.appendChild(plusSign);
+  resetDisplay();
+}
+
+function divide() {
+  resetHistory();
+  let operand1 = document.createElement('li');
+  let plusSign = document.createElement('li');
+  plusSign.textContent = '/';
+  let a = parseFloat(display.textContent);
+  operand1.textContent = a;
+  history.appendChild(operand1);
+  history.appendChild(plusSign);
+  resetDisplay();
+}
+
 function equalsTo() {
+  if(history.children.length <= 3) {
   let operand2 = document.createElement('li');
   let equalsSign = document.createElement('li');
   equalsSign.textContent = '=';
@@ -84,7 +174,8 @@ function equalsTo() {
   operand2.textContent = a;
   history.appendChild(operand2);
   history.appendChild(equalsSign);
-  operate();
+    operate();
+  }
 }
 
 function operate() {
@@ -94,4 +185,5 @@ function operate() {
   let result = eval(operand1 + operator + operand2);
   resetDisplay();
   display.textContent = result;
+  operationExecuted = true;
 }
