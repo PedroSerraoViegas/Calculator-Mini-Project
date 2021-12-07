@@ -19,110 +19,58 @@ let lastResult;
 //EVENT LISTENERS
 for (let i = 0; i < buttonClass.length; i++) {
   buttonClass[i].addEventListener('click', () => {
-      if (operationExecuted === true && history.lastElementChild.textContent !== '=') {
-        resetDisplay();
-        operationExecuted = false;
-      } else if (operationExecuted === true){
-        resetCalc();
-        operationExecuted = false;
-      }
-      display.textContent += parseInt(buttonClass[i].textContent);
-    }) 
-  }
+    if (operationExecuted === true && history.lastElementChild.textContent !== '=') {
+      resetDisplay();
+      operationExecuted = false;
+    } else if (operationExecuted === true) {
+      resetCalc();
+      operationExecuted = false;
+    }
+    display.textContent += parseInt(buttonClass[i].textContent);
+  })
+}
 
 equalsButton.addEventListener('click', () => {
   equalsTo();
 })
 
 addButton.addEventListener('click', () => {
-  if (history.children.length >= 2 && history.children[1].textContent !== '+') {
-    if (display.textContent !== '') {
-      equalsTo();
-    }
-    history.children[1].textContent = '+'
-  }
-  if (history.children.length = 4 && display.textContent === '') {
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
-    history.children[0].textContent = lastResult;
-    history.children[1].textContent = '+'
-  }
+  updateOperator('+')
+  updateDisplay('+')
   if (history.firstElementChild === null || history.children.length === 4) {
-    add();
-  } else if (display.textContent !== '' && operationExecuted === false){
-    equalsTo();
-    history.firstChild.textContent = display.textContent;
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
+    defineOperation('+');
+  } else {
+    doConsecutiveOperation();
   }
 })
 
 subtractButton.addEventListener('click', () => {
-  if (history.children.length >= 2 && history.children[1].textContent !== '-') {
-    if (display.textContent !== '') {
-      equalsTo();
-    }
-    history.children[1].textContent = '-'
-  }
-  if (history.children.length = 4 && display.textContent === '') {
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
-    history.children[0].textContent = lastResult;
-    history.children[1].textContent = '-'
-  }
+  updateOperator('-')
+  updateDisplay('-')
   if (history.firstElementChild === null || history.children.length === 4) {
-    subtract();
-  } else if (display.textContent !== '' && operationExecuted === false){
-    equalsTo();
-    history.firstChild.textContent = display.textContent;
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
+    defineOperation('-');
+  } else {
+    doConsecutiveOperation();
   }
 })
 
 multiplyButton.addEventListener('click', () => {
-  if (history.children.length >= 2 && history.children[1].textContent !== '*') {
-    if (display.textContent !== '') {
-      equalsTo();
-    }
-    history.children[1].textContent = '*'
-  }
-  if (history.children.length = 4 && display.textContent === '') {
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
-    history.children[0].textContent = lastResult;
-    history.children[1].textContent = '*'
-  }
+  updateOperator('*')
+  updateDisplay('*')
   if (history.firstElementChild === null || history.children.length === 4) {
-    multiply();
-  } else if (display.textContent !== '' && operationExecuted === false){
-    equalsTo();
-    history.firstChild.textContent = display.textContent;
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
+    defineOperation('*');
+  } else {
+    doConsecutiveOperation();
   }
 })
 
 divideButton.addEventListener('click', () => {
-  if (history.children.length >= 2 && history.children[1].textContent !== '/') {
-    if (display.textContent !== '') {
-      equalsTo();
-    }
-    history.children[1].textContent = '/'
-  }
-  if (history.children.length = 4 && display.textContent === '') {
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
-    history.children[0].textContent = lastResult;
-    history.children[1].textContent = '/'
-  }
+  updateOperator('/')
+  updateDisplay('/')
   if (history.firstElementChild === null || history.children.length === 4) {
-    divide();
-  } else if (display.textContent !== '' && operationExecuted === false){
-    equalsTo();
-    history.firstChild.textContent = display.textContent;
-    history.removeChild(history.lastElementChild);
-    history.removeChild(history.lastElementChild);
+    defineOperation('/');
+  } else {
+    doConsecutiveOperation();
   }
 })
 
@@ -136,7 +84,12 @@ erase.addEventListener('click', () => {
   let displayedNum = display.textContent;
   if (display.textContent.length > 1) {
     let erasedNUM = displayedNum.slice(0, -1)
-    display.textContent = parseFloat(erasedNUM);
+    display.textContent = erasedNUM;
+    if (display.textContent === '-') {
+      let erasedNUM = displayedNum.slice(0, -1)
+      display.textContent = erasedNUM;
+      resetCalc();
+    }
   } else {
     resetCalc();
   }
@@ -161,6 +114,7 @@ function resetHistory() {
 }
 
 function resetCalc() {
+  operationExecuted = false;
   lastResult = '';
   resetDisplay();
   resetHistory();
@@ -170,64 +124,58 @@ function resetDisplay() {
   display.textContent = '';
 }
 
+//BEHAVIOR FUNCTIONS
+function updateOperator(operator) {
+  if (history.children.length >= 2 && history.children[1].textContent !== operator) {
+    if (display.textContent !== '') {
+      equalsTo();
+    }
+    history.children[1].textContent = operator;
+  }
+}
+
+function updateDisplay(operator) {
+  if (history.children.length === 4 && display.textContent === '') {
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+    history.children[0].textContent = lastResult;
+    history.children[1].textContent = operator;
+  }
+}
+
+function doConsecutiveOperation() {
+  if (display.textContent !== '' && operationExecuted === false) {
+    equalsTo();
+    history.firstChild.textContent = display.textContent;
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+  }
+}
+
 //MATHEMATICAL OPERATIONS
-function add() {
-  resetHistory();
-  let operand1 = document.createElement('li');
-  let plusSign = document.createElement('li');
-  plusSign.textContent = '+';
-  let a = parseFloat(display.textContent);
-  operand1.textContent = a;
-  history.appendChild(operand1);
-  history.appendChild(plusSign);
-  resetDisplay();
-}
-
-function subtract() {
-  resetHistory();
-  let operand1 = document.createElement('li');
-  let plusSign = document.createElement('li');
-  plusSign.textContent = '-';
-  let a = parseFloat(display.textContent);
-  operand1.textContent = a;
-  history.appendChild(operand1);
-  history.appendChild(plusSign);
-  resetDisplay();
-}
-
-function multiply() {
-  resetHistory();
-  let operand1 = document.createElement('li');
-  let plusSign = document.createElement('li');
-  plusSign.textContent = '*';
-  let a = parseFloat(display.textContent);
-  operand1.textContent = a;
-  history.appendChild(operand1);
-  history.appendChild(plusSign);
-  resetDisplay();
-}
-
-function divide() {
-  resetHistory();
-  let operand1 = document.createElement('li');
-  let plusSign = document.createElement('li');
-  plusSign.textContent = '/';
-  let a = parseFloat(display.textContent);
-  operand1.textContent = a;
-  history.appendChild(operand1);
-  history.appendChild(plusSign);
-  resetDisplay();
+function defineOperation(operator) {
+  if (display.textContent !== '') {
+    resetHistory();
+    let operand1 = document.createElement('li');
+    let operationSign = document.createElement('li');
+    operationSign.textContent = operator;
+    let a = parseFloat(display.textContent);
+    operand1.textContent = a;
+    history.appendChild(operand1);
+    history.appendChild(operationSign);
+    resetDisplay();
+  }
 }
 
 function equalsTo() {
-  if(history.children.length <= 3) {
-  let operand2 = document.createElement('li');
-  let equalsSign = document.createElement('li');
-  equalsSign.textContent = '=';
-  let a = parseFloat(display.textContent);
-  operand2.textContent = a;
-  history.appendChild(operand2);
-  history.appendChild(equalsSign);
+  if (history.children.length <= 3 && display.textContent !== '') {
+    let operand2 = document.createElement('li');
+    let equalsSign = document.createElement('li');
+    equalsSign.textContent = '=';
+    let a = parseFloat(display.textContent);
+    operand2.textContent = a;
+    history.appendChild(operand2);
+    history.appendChild(equalsSign);
     operate();
   }
 }
@@ -239,5 +187,6 @@ function operate() {
   let result = eval(operand1 + operator + operand2);
   resetDisplay();
   display.textContent = result;
+  lastResult = result;
   operationExecuted = true;
 }
