@@ -168,7 +168,7 @@ function defineOperation(operator) {
 }
 
 function equalsTo() {
-  if (history.children.length <= 3) {
+  if (history.children.length <= 3 && display.textContent !== '') {
     let operand2 = document.createElement('li');
     let equalsSign = document.createElement('li');
     equalsSign.textContent = '=';
