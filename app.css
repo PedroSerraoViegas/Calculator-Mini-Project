@@ -1,3 +1,33 @@
+*{
+    text-align: center;
+    margin: 0 auto;
+}
+h1 {
+    color: #ffa260;
+}
+body {
+    font-family: 'Zen-Kurenaido';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: palegoldenrod;
+}
+
+span {
+    color: #ffa260;
+}
+
+button {
+    background: none;
+    color: #ffa260;
+    border: 2px solid;
+    border-radius: 6em;
+    padding: 0.7em 1.6em;
+    font-size: 1em;
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
 button:hover {
     border-color: #f1ff5c;
     color: white;
@@ -34,6 +64,7 @@ height: 100px;
     width: 225px;
     height: 19px;
     border-bottom: 1px solid #f1ff5c;
+    border-top: 1px solid #f1ff5c;
     display: block;
 }
 #calcButtons {
