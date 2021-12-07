@@ -13,6 +13,7 @@ const clearEntry = document.querySelector('#clearEntry');
 const specialButton = document.querySelector('#specialButton');
 const buttonClass = document.getElementsByClassName('inputButton');
 let operationExecuted = false;
+let lastResult;
 
 
 //EVENT LISTENERS
@@ -40,6 +41,12 @@ addButton.addEventListener('click', () => {
     }
     history.children[1].textContent = '+'
   }
+  if (history.children.length = 4 && display.textContent === '') {
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+    history.children[0].textContent = lastResult;
+    history.children[1].textContent = '+'
+  }
   if (history.firstElementChild === null || history.children.length === 4) {
     add();
   } else if (display.textContent !== '' && operationExecuted === false){
@@ -55,6 +62,12 @@ subtractButton.addEventListener('click', () => {
     if (display.textContent !== '') {
       equalsTo();
     }
+    history.children[1].textContent = '-'
+  }
+  if (history.children.length = 4 && display.textContent === '') {
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+    history.children[0].textContent = lastResult;
     history.children[1].textContent = '-'
   }
   if (history.firstElementChild === null || history.children.length === 4) {
@@ -74,6 +87,12 @@ multiplyButton.addEventListener('click', () => {
     }
     history.children[1].textContent = '*'
   }
+  if (history.children.length = 4 && display.textContent === '') {
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+    history.children[0].textContent = lastResult;
+    history.children[1].textContent = '*'
+  }
   if (history.firstElementChild === null || history.children.length === 4) {
     multiply();
   } else if (display.textContent !== '' && operationExecuted === false){
@@ -89,6 +108,12 @@ divideButton.addEventListener('click', () => {
     if (display.textContent !== '') {
       equalsTo();
     }
+    history.children[1].textContent = '/'
+  }
+  if (history.children.length = 4 && display.textContent === '') {
+    history.removeChild(history.lastElementChild);
+    history.removeChild(history.lastElementChild);
+    history.children[0].textContent = lastResult;
     history.children[1].textContent = '/'
   }
   if (history.firstElementChild === null || history.children.length === 4) {
@@ -123,6 +148,7 @@ clearAll.addEventListener('click', () => {
 })
 
 clearEntry.addEventListener('click', () => {
+  lastResult = parseFloat(display.textContent);
   resetDisplay();
   operationExecuted = false;
 })
@@ -135,6 +161,7 @@ function resetHistory() {
 }
 
 function resetCalc() {
+  lastResult = '';
   resetDisplay();
   resetHistory();
 }
