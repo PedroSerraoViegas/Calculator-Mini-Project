@@ -13,6 +13,7 @@ const clearEntry = document.querySelector('#clearEntry');
 const specialButton = document.querySelector('#specialButton');
 const buttonClass = document.getElementsByClassName('inputButton');
 let operationExecuted = false;
+let operatorActive = false;
 let lastResult;
 
 
@@ -115,6 +116,7 @@ function resetHistory() {
 
 function resetCalc() {
   operationExecuted = false;
+  operatorActive = false;
   lastResult = '';
   resetDisplay();
   resetHistory();
@@ -131,6 +133,7 @@ function updateOperator(operator) {
       equalsTo();
     }
     history.children[1].textContent = operator;
+    operatorActive = true;
   }
 }
 
@@ -164,11 +167,12 @@ function defineOperation(operator) {
     history.appendChild(operand1);
     history.appendChild(operationSign);
     resetDisplay();
+    operatorActive = true;
   }
 }
 
 function equalsTo() {
-  if (history.children.length <= 3 && display.textContent !== '') {
+  if (history.children.length <= 3 && display.textContent !== '' && operatorActive === true) {
     let operand2 = document.createElement('li');
     let equalsSign = document.createElement('li');
     equalsSign.textContent = '=';
@@ -189,4 +193,5 @@ function operate() {
   display.textContent = result;
   lastResult = result;
   operationExecuted = true;
+  operatorActive = false;
 }
